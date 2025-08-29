@@ -1,0 +1,20 @@
+provider:
+  name: os
+
+data_sources:
+  deploy_image:
+    read:
+      path: /workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages/{name}
+      method: GET
+
+  deploy_image_list:
+    read:
+      path: /workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages
+      method: GET
+
+  workflow_get_inputs_resp_elem:
+    read:
+      path: /workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages/{name}/_input
+      method: GET
+
+resources:

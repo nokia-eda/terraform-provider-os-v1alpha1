@@ -1,0 +1,817 @@
+{
+    "datasources": [
+        {
+            "name": "deploy_image",
+            "schema": {
+                "attributes": [
+                    {
+                        "name": "name",
+                        "string": {
+                            "computed_optional_required": "required",
+                            "description": "name of the DeployImage"
+                        }
+                    },
+                    {
+                        "name": "namespace",
+                        "string": {
+                            "computed_optional_required": "required",
+                            "description": "the namespace scope in which to operate"
+                        }
+                    },
+                    {
+                        "name": "api_version",
+                        "string": {
+                            "computed_optional_required": "computed"
+                        }
+                    },
+                    {
+                        "name": "kind",
+                        "string": {
+                            "computed_optional_required": "computed"
+                        }
+                    },
+                    {
+                        "name": "metadata",
+                        "single_nested": {
+                            "computed_optional_required": "computed",
+                            "attributes": [
+                                {
+                                    "name": "annotations",
+                                    "map": {
+                                        "computed_optional_required": "computed",
+                                        "element_type": {
+                                            "string": {}
+                                        }
+                                    }
+                                },
+                                {
+                                    "name": "labels",
+                                    "map": {
+                                        "computed_optional_required": "computed",
+                                        "element_type": {
+                                            "string": {}
+                                        }
+                                    }
+                                },
+                                {
+                                    "name": "name",
+                                    "string": {
+                                        "computed_optional_required": "computed"
+                                    }
+                                },
+                                {
+                                    "name": "namespace",
+                                    "string": {
+                                        "computed_optional_required": "computed"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "spec",
+                        "single_nested": {
+                            "computed_optional_required": "optional",
+                            "attributes": [
+                                {
+                                    "name": "canaries",
+                                    "list": {
+                                        "computed_optional_required": "optional",
+                                        "element_type": {
+                                            "string": {}
+                                        },
+                                        "description": "List of node selectors to use to match canary nodes.\nThis matches labels on TopoNode resources, including those TopoNodes in the list of nodes that will be imaged.\nCanary nodes are upgraded before any other nodes, and are used to test images before broader roll out.\nThis is a list of label expressions, e.g. [\"eda.nokia.com/role=canary\"]."
+                                    }
+                                },
+                                {
+                                    "name": "checks",
+                                    "single_nested": {
+                                        "computed_optional_required": "optional",
+                                        "attributes": [
+                                            {
+                                                "name": "checks",
+                                                "list": {
+                                                    "computed_optional_required": "optional",
+                                                    "element_type": {
+                                                        "string": {}
+                                                    },
+                                                    "description": "Checks to run before (pre) and after (post) any image changes.\nIf none are specified, a default set of checks will be run."
+                                                }
+                                            },
+                                            {
+                                                "name": "force",
+                                                "bool": {
+                                                    "computed_optional_required": "optional",
+                                                    "description": "Ignore result of pre and post checks, do not prompt on failure."
+                                                }
+                                            },
+                                            {
+                                                "name": "skip",
+                                                "bool": {
+                                                    "computed_optional_required": "optional",
+                                                    "description": "Do not run any checks pre or post image change."
+                                                }
+                                            }
+                                        ],
+                                        "description": "Configure pre and post checks."
+                                    }
+                                },
+                                {
+                                    "name": "drains",
+                                    "single_nested": {
+                                        "computed_optional_required": "optional",
+                                        "attributes": [
+                                            {
+                                                "name": "minimum_wait_time_seconds",
+                                                "int64": {
+                                                    "computed_optional_required": "optional",
+                                                    "description": "Seconds to wait before rebooting a node after it has been drained.\nThis is used to allow time for any traffic to drain away from the node before reboot."
+                                                }
+                                            },
+                                            {
+                                                "name": "skip",
+                                                "bool": {
+                                                    "computed_optional_required": "optional",
+                                                    "description": "Do not run any drain operations. Nodes will be rebooted without attempting to gracefully drain them."
+                                                }
+                                            }
+                                        ],
+                                        "description": "Configure drains to gracefully drain traffic away from nodes before imaging."
+                                    }
+                                },
+                                {
+                                    "name": "node_profile",
+                                    "string": {
+                                        "computed_optional_required": "optional",
+                                        "description": "Destination profile to use for imaging.\nThis profile contains the image to deploy, and other configuration for the node."
+                                    }
+                                },
+                                {
+                                    "name": "node_selectors",
+                                    "list": {
+                                        "computed_optional_required": "optional",
+                                        "element_type": {
+                                            "string": {}
+                                        },
+                                        "description": "List of node selectors to select nodes to deploy images on.\nThis matches labels on TopoNode resources, including those TopoNodes in the list of nodes that will be imaged.\nIf no nodes are specified, and no node selectors are specified, all nodes in the given namespace will be selected.\nThis is a list of label expressions, e.g. [\"eda.nokia.com/role=leaf\"]."
+                                    }
+                                },
+                                {
+                                    "name": "nodes",
+                                    "list": {
+                                        "computed_optional_required": "optional",
+                                        "element_type": {
+                                            "string": {}
+                                        },
+                                        "description": "List of nodes to deploy images on."
+                                    }
+                                },
+                                {
+                                    "name": "prompt",
+                                    "list": {
+                                        "computed_optional_required": "optional",
+                                        "element_type": {
+                                            "string": {}
+                                        },
+                                        "description": "Control when to prompt the user for input.\nIf any pre or post checks fail, the user will be prompted for input, but this may be used to prompt even if they're successful."
+                                    }
+                                },
+                                {
+                                    "name": "tranches",
+                                    "list_nested": {
+                                        "computed_optional_required": "optional",
+                                        "nested_object": {
+                                            "attributes": [
+                                                {
+                                                    "name": "name",
+                                                    "string": {
+                                                        "computed_optional_required": "optional",
+                                                        "description": "Name of the tranche.\nThis is used to identify the tranche in the UI and in logs."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "node_selectors",
+                                                    "list": {
+                                                        "computed_optional_required": "optional",
+                                                        "element_type": {
+                                                            "string": {}
+                                                        },
+                                                        "description": "Node Selectors is a list of node selectors to select nodes to deploy images on in this tranche.\nThis matches labels on TopoNode resources, including those TopoNodes in the list of nodes that will be imaged.\nThis is a list of label expressions, e.g. [\"eda.nokia.com/role=leaf\"]."
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "description": "List of tranches to use for imaging.\nA tranche is a list of node selectors, and a name.\nTranches are upgraded in order, sequentially."
+                                    }
+                                }
+                            ],
+                            "description": "Upgrade / downgrade images on targets.\nThis workflow can be used directly on a target or list of targets, or with selectors to select targets through labels.\nIt also supports tranches, which are groups of targets that can be upgraded together.\nBy default a set of checks are run before and after the image change, but this can be controlled via the checks field.\nIt also supports canaries, which are upgraded before any other targets."
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "single_nested": {
+                            "computed_optional_required": "computed",
+                            "attributes": [
+                                {
+                                    "name": "details",
+                                    "list_nested": {
+                                        "computed_optional_required": "computed",
+                                        "nested_object": {
+                                            "attributes": [
+                                                {
+                                                    "name": "drained_time",
+                                                    "string": {
+                                                        "computed_optional_required": "computed",
+                                                        "description": "The time when the node was drained.\nThis is the time when the node was drained before the imaging operation."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "new_node_profile",
+                                                    "string": {
+                                                        "computed_optional_required": "computed",
+                                                        "description": "The new profile of the node."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "new_version",
+                                                    "string": {
+                                                        "computed_optional_required": "computed",
+                                                        "description": "The new version of the node."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "node",
+                                                    "string": {
+                                                        "computed_optional_required": "computed",
+                                                        "description": "The name of the node this result is for."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "post_check_successful",
+                                                    "bool": {
+                                                        "computed_optional_required": "computed",
+                                                        "description": "Indicates if post checks were successful for this node.\nThis is true if all post checks passed, false if any post checks failed."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "pre_check_successful",
+                                                    "bool": {
+                                                        "computed_optional_required": "computed",
+                                                        "description": "Indicates if pre checks were successful for this node.\nThis is true if all pre checks passed, false if any pre checks failed."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "previous_node_profile",
+                                                    "string": {
+                                                        "computed_optional_required": "computed",
+                                                        "description": "The previous profile of the node.\nThis is the node profile that was running before the imaging operation."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "previous_version",
+                                                    "string": {
+                                                        "computed_optional_required": "computed",
+                                                        "description": "The previous version of the node.\nThis is the version of the image that was running before the imaging operation."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "reboot_recovery_time",
+                                                    "string": {
+                                                        "computed_optional_required": "computed",
+                                                        "description": "The time when the node was recovered after reboot.\nThis is the time when the node was recovered after the imaging operation."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "reboot_time",
+                                                    "string": {
+                                                        "computed_optional_required": "computed",
+                                                        "description": "The time when the node was rebooted.\nThis is the time when the node was rebooted during the imaging operation."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "success",
+                                                    "bool": {
+                                                        "computed_optional_required": "computed",
+                                                        "description": "Indicates if the imaging operation was successful for this node.\nThis is true if the imaging operation was successful, false if it failed."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "undrained_time",
+                                                    "string": {
+                                                        "computed_optional_required": "computed",
+                                                        "description": "The time when the node was undrained.\nThis is the time when the node was undrained after the imaging operation."
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "description": "Per-node image deployment details."
+                                    }
+                                },
+                                {
+                                    "name": "first_node_drained",
+                                    "string": {
+                                        "computed_optional_required": "computed",
+                                        "description": "The time when the first node was drained."
+                                    }
+                                },
+                                {
+                                    "name": "first_node_rebooted",
+                                    "string": {
+                                        "computed_optional_required": "computed",
+                                        "description": "The time when the first node was rebooted."
+                                    }
+                                },
+                                {
+                                    "name": "last_node_reboot_recovered",
+                                    "string": {
+                                        "computed_optional_required": "computed",
+                                        "description": "The time when the last node recovered post reboot."
+                                    }
+                                },
+                                {
+                                    "name": "last_node_undrained",
+                                    "string": {
+                                        "computed_optional_required": "computed",
+                                        "description": "The time when the last node was undrained."
+                                    }
+                                },
+                                {
+                                    "name": "result",
+                                    "string": {
+                                        "computed_optional_required": "computed",
+                                        "description": "Result is the overall result of the image operation.\nIt can be one of the following values:\n- \"Success\": All images were successfully deployed.\n- \"Failed\": No images were successfully deployed.\n- \"PartialSuccess\": Some images were successfully deployed, but not all."
+                                    }
+                                }
+                            ],
+                            "description": "Status of the imaging operation."
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "deploy_image_list",
+            "schema": {
+                "attributes": [
+                    {
+                        "name": "fields",
+                        "string": {
+                            "computed_optional_required": "computed_optional",
+                            "description": "a comma-separated list of resource fields to fetch/return.  If unspecified, all fields are fetched.  If empty, only key-fields are fetched."
+                        }
+                    },
+                    {
+                        "name": "filter",
+                        "string": {
+                            "computed_optional_required": "computed_optional",
+                            "description": "an EQL \"where\" expression that will be used to filter the set of resources returned."
+                        }
+                    },
+                    {
+                        "name": "labelselector",
+                        "string": {
+                            "computed_optional_required": "computed_optional",
+                            "description": "a label selector string to filter the results based on CR labels"
+                        }
+                    },
+                    {
+                        "name": "namespace",
+                        "string": {
+                            "computed_optional_required": "required",
+                            "description": "the namespace scope in which to operate"
+                        }
+                    },
+                    {
+                        "name": "api_version",
+                        "string": {
+                            "computed_optional_required": "computed"
+                        }
+                    },
+                    {
+                        "name": "items",
+                        "list_nested": {
+                            "computed_optional_required": "computed",
+                            "nested_object": {
+                                "attributes": [
+                                    {
+                                        "name": "api_version",
+                                        "string": {
+                                            "computed_optional_required": "computed"
+                                        }
+                                    },
+                                    {
+                                        "name": "kind",
+                                        "string": {
+                                            "computed_optional_required": "computed"
+                                        }
+                                    },
+                                    {
+                                        "name": "metadata",
+                                        "single_nested": {
+                                            "computed_optional_required": "computed",
+                                            "attributes": [
+                                                {
+                                                    "name": "annotations",
+                                                    "map": {
+                                                        "computed_optional_required": "computed",
+                                                        "element_type": {
+                                                            "string": {}
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "name": "labels",
+                                                    "map": {
+                                                        "computed_optional_required": "computed",
+                                                        "element_type": {
+                                                            "string": {}
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "name": "name",
+                                                    "string": {
+                                                        "computed_optional_required": "computed"
+                                                    }
+                                                },
+                                                {
+                                                    "name": "namespace",
+                                                    "string": {
+                                                        "computed_optional_required": "computed"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "spec",
+                                        "single_nested": {
+                                            "computed_optional_required": "optional",
+                                            "attributes": [
+                                                {
+                                                    "name": "canaries",
+                                                    "list": {
+                                                        "computed_optional_required": "optional",
+                                                        "element_type": {
+                                                            "string": {}
+                                                        },
+                                                        "description": "List of node selectors to use to match canary nodes.\nThis matches labels on TopoNode resources, including those TopoNodes in the list of nodes that will be imaged.\nCanary nodes are upgraded before any other nodes, and are used to test images before broader roll out.\nThis is a list of label expressions, e.g. [\"eda.nokia.com/role=canary\"]."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "checks",
+                                                    "single_nested": {
+                                                        "computed_optional_required": "optional",
+                                                        "attributes": [
+                                                            {
+                                                                "name": "checks",
+                                                                "list": {
+                                                                    "computed_optional_required": "optional",
+                                                                    "element_type": {
+                                                                        "string": {}
+                                                                    },
+                                                                    "description": "Checks to run before (pre) and after (post) any image changes.\nIf none are specified, a default set of checks will be run."
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "force",
+                                                                "bool": {
+                                                                    "computed_optional_required": "optional",
+                                                                    "description": "Ignore result of pre and post checks, do not prompt on failure."
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "skip",
+                                                                "bool": {
+                                                                    "computed_optional_required": "optional",
+                                                                    "description": "Do not run any checks pre or post image change."
+                                                                }
+                                                            }
+                                                        ],
+                                                        "description": "Configure pre and post checks."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "drains",
+                                                    "single_nested": {
+                                                        "computed_optional_required": "optional",
+                                                        "attributes": [
+                                                            {
+                                                                "name": "minimum_wait_time_seconds",
+                                                                "int64": {
+                                                                    "computed_optional_required": "optional",
+                                                                    "description": "Seconds to wait before rebooting a node after it has been drained.\nThis is used to allow time for any traffic to drain away from the node before reboot."
+                                                                }
+                                                            },
+                                                            {
+                                                                "name": "skip",
+                                                                "bool": {
+                                                                    "computed_optional_required": "optional",
+                                                                    "description": "Do not run any drain operations. Nodes will be rebooted without attempting to gracefully drain them."
+                                                                }
+                                                            }
+                                                        ],
+                                                        "description": "Configure drains to gracefully drain traffic away from nodes before imaging."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "node_profile",
+                                                    "string": {
+                                                        "computed_optional_required": "optional",
+                                                        "description": "Destination profile to use for imaging.\nThis profile contains the image to deploy, and other configuration for the node."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "node_selectors",
+                                                    "list": {
+                                                        "computed_optional_required": "optional",
+                                                        "element_type": {
+                                                            "string": {}
+                                                        },
+                                                        "description": "List of node selectors to select nodes to deploy images on.\nThis matches labels on TopoNode resources, including those TopoNodes in the list of nodes that will be imaged.\nIf no nodes are specified, and no node selectors are specified, all nodes in the given namespace will be selected.\nThis is a list of label expressions, e.g. [\"eda.nokia.com/role=leaf\"]."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "nodes",
+                                                    "list": {
+                                                        "computed_optional_required": "optional",
+                                                        "element_type": {
+                                                            "string": {}
+                                                        },
+                                                        "description": "List of nodes to deploy images on."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "prompt",
+                                                    "list": {
+                                                        "computed_optional_required": "optional",
+                                                        "element_type": {
+                                                            "string": {}
+                                                        },
+                                                        "description": "Control when to prompt the user for input.\nIf any pre or post checks fail, the user will be prompted for input, but this may be used to prompt even if they're successful."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "tranches",
+                                                    "list_nested": {
+                                                        "computed_optional_required": "optional",
+                                                        "nested_object": {
+                                                            "attributes": [
+                                                                {
+                                                                    "name": "name",
+                                                                    "string": {
+                                                                        "computed_optional_required": "optional",
+                                                                        "description": "Name of the tranche.\nThis is used to identify the tranche in the UI and in logs."
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "node_selectors",
+                                                                    "list": {
+                                                                        "computed_optional_required": "optional",
+                                                                        "element_type": {
+                                                                            "string": {}
+                                                                        },
+                                                                        "description": "Node Selectors is a list of node selectors to select nodes to deploy images on in this tranche.\nThis matches labels on TopoNode resources, including those TopoNodes in the list of nodes that will be imaged.\nThis is a list of label expressions, e.g. [\"eda.nokia.com/role=leaf\"]."
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "description": "List of tranches to use for imaging.\nA tranche is a list of node selectors, and a name.\nTranches are upgraded in order, sequentially."
+                                                    }
+                                                }
+                                            ],
+                                            "description": "Upgrade / downgrade images on targets.\nThis workflow can be used directly on a target or list of targets, or with selectors to select targets through labels.\nIt also supports tranches, which are groups of targets that can be upgraded together.\nBy default a set of checks are run before and after the image change, but this can be controlled via the checks field.\nIt also supports canaries, which are upgraded before any other targets."
+                                        }
+                                    },
+                                    {
+                                        "name": "status",
+                                        "single_nested": {
+                                            "computed_optional_required": "computed",
+                                            "attributes": [
+                                                {
+                                                    "name": "details",
+                                                    "list_nested": {
+                                                        "computed_optional_required": "computed",
+                                                        "nested_object": {
+                                                            "attributes": [
+                                                                {
+                                                                    "name": "drained_time",
+                                                                    "string": {
+                                                                        "computed_optional_required": "computed",
+                                                                        "description": "The time when the node was drained.\nThis is the time when the node was drained before the imaging operation."
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "new_node_profile",
+                                                                    "string": {
+                                                                        "computed_optional_required": "computed",
+                                                                        "description": "The new profile of the node."
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "new_version",
+                                                                    "string": {
+                                                                        "computed_optional_required": "computed",
+                                                                        "description": "The new version of the node."
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "node",
+                                                                    "string": {
+                                                                        "computed_optional_required": "computed",
+                                                                        "description": "The name of the node this result is for."
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "post_check_successful",
+                                                                    "bool": {
+                                                                        "computed_optional_required": "computed",
+                                                                        "description": "Indicates if post checks were successful for this node.\nThis is true if all post checks passed, false if any post checks failed."
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "pre_check_successful",
+                                                                    "bool": {
+                                                                        "computed_optional_required": "computed",
+                                                                        "description": "Indicates if pre checks were successful for this node.\nThis is true if all pre checks passed, false if any pre checks failed."
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "previous_node_profile",
+                                                                    "string": {
+                                                                        "computed_optional_required": "computed",
+                                                                        "description": "The previous profile of the node.\nThis is the node profile that was running before the imaging operation."
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "previous_version",
+                                                                    "string": {
+                                                                        "computed_optional_required": "computed",
+                                                                        "description": "The previous version of the node.\nThis is the version of the image that was running before the imaging operation."
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "reboot_recovery_time",
+                                                                    "string": {
+                                                                        "computed_optional_required": "computed",
+                                                                        "description": "The time when the node was recovered after reboot.\nThis is the time when the node was recovered after the imaging operation."
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "reboot_time",
+                                                                    "string": {
+                                                                        "computed_optional_required": "computed",
+                                                                        "description": "The time when the node was rebooted.\nThis is the time when the node was rebooted during the imaging operation."
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "success",
+                                                                    "bool": {
+                                                                        "computed_optional_required": "computed",
+                                                                        "description": "Indicates if the imaging operation was successful for this node.\nThis is true if the imaging operation was successful, false if it failed."
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "name": "undrained_time",
+                                                                    "string": {
+                                                                        "computed_optional_required": "computed",
+                                                                        "description": "The time when the node was undrained.\nThis is the time when the node was undrained after the imaging operation."
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "description": "Per-node image deployment details."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "first_node_drained",
+                                                    "string": {
+                                                        "computed_optional_required": "computed",
+                                                        "description": "The time when the first node was drained."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "first_node_rebooted",
+                                                    "string": {
+                                                        "computed_optional_required": "computed",
+                                                        "description": "The time when the first node was rebooted."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "last_node_reboot_recovered",
+                                                    "string": {
+                                                        "computed_optional_required": "computed",
+                                                        "description": "The time when the last node recovered post reboot."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "last_node_undrained",
+                                                    "string": {
+                                                        "computed_optional_required": "computed",
+                                                        "description": "The time when the last node was undrained."
+                                                    }
+                                                },
+                                                {
+                                                    "name": "result",
+                                                    "string": {
+                                                        "computed_optional_required": "computed",
+                                                        "description": "Result is the overall result of the image operation.\nIt can be one of the following values:\n- \"Success\": All images were successfully deployed.\n- \"Failed\": No images were successfully deployed.\n- \"PartialSuccess\": Some images were successfully deployed, but not all."
+                                                    }
+                                                }
+                                            ],
+                                            "description": "Status of the imaging operation."
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "kind",
+                        "string": {
+                            "computed_optional_required": "computed"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "workflow_get_inputs_resp_elem",
+            "schema": {
+                "attributes": [
+                    {
+                        "name": "name",
+                        "string": {
+                            "computed_optional_required": "required",
+                            "description": "name of the DeployImage"
+                        }
+                    },
+                    {
+                        "name": "namespace",
+                        "string": {
+                            "computed_optional_required": "required",
+                            "description": "the namespace scope in which to operate"
+                        }
+                    },
+                    {
+                        "name": "workflow_get_inputs_resp_elem",
+                        "set_nested": {
+                            "computed_optional_required": "computed",
+                            "nested_object": {
+                                "attributes": [
+                                    {
+                                        "name": "ack_prompt",
+                                        "string": {
+                                            "computed_optional_required": "computed"
+                                        }
+                                    },
+                                    {
+                                        "name": "group",
+                                        "string": {
+                                            "computed_optional_required": "computed"
+                                        }
+                                    },
+                                    {
+                                        "name": "kind",
+                                        "string": {
+                                            "computed_optional_required": "computed"
+                                        }
+                                    },
+                                    {
+                                        "name": "name",
+                                        "string": {
+                                            "computed_optional_required": "computed"
+                                        }
+                                    },
+                                    {
+                                        "name": "namespace",
+                                        "string": {
+                                            "computed_optional_required": "computed"
+                                        }
+                                    },
+                                    {
+                                        "name": "schema_prompt",
+                                        "single_nested": {
+                                            "computed_optional_required": "computed"
+                                        }
+                                    },
+                                    {
+                                        "name": "version",
+                                        "string": {
+                                            "computed_optional_required": "computed"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "provider": {
+        "name": "os"
+    },
+    "version": "0.1"
+}
