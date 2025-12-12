@@ -23,28 +23,56 @@
         "type": "object"
       },
       "ErrorResponse": {
-        "description": "Generic error response for REST APIs",
         "properties": {
+          "causeCollection": {
+            "description": "A lower-level set of structured errors.\n\nOnly oneOf `causeWrapped`, `causeSimple`, `causeCollection`, or `causeIndexedCollection` will ever be set.",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "type": "array"
+          },
+          "causeIndexedCollection": {
+            "description": "A lower-level set of structured errors.\nEach of these errors MUST have index set.\n\nOnly oneOf `causeWrapped`, `causeSimple`, `causeCollection`, or `causeIndexedCollection` will ever be set.",
+            "items": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "type": "array"
+          },
+          "causeIsInternal": {
+            "description": "If true, then the cause (`causeWrapped`, `causeSimple`, `causeCollection`, or `causeIndexedCollection`) should be hidden from the user.",
+            "type": "boolean"
+          },
+          "causeSimple": {
+            "description": "Simple string error type.\n\nOnly oneOf `causeWrapped`, `causeSimple`, `causeCollection`, or `causeIndexedCollection` will ever be set.",
+            "type": "string"
+          },
+          "causeWrapped": {
+            "$ref": "#/components/schemas/ErrorResponse"
+          },
           "code": {
-            "description": "the numeric HTTP error code for the response.",
+            "deprecated": true,
+            "description": "the numeric HTTP error code for the response.\n\nDeprecated: Prefer to check the request's HTTP response code directly.",
             "format": "int64",
             "type": "integer"
           },
           "details": {
-            "description": "The optional details of the error response.",
+            "deprecated": true,
+            "description": "The optional details of the error response.\nDeprecated: Replaced by `causeSimple`.",
             "type": "string"
           },
           "dictionary": {
             "additionalProperties": true,
-            "description": "Dictionary/map of associated data/information relevant to the error.\nThe error \"message\" may contain {{name}} escapes that should be substituted\nwith information from this dictionary.",
+            "deprecated": true,
+            "description": "Dictionary/map of associated data/information relevant to the error.\nThe error \"message\" may contain {{name}} escapes that should be substituted\nwith information from this dictionary.\n\nDeprecated: Use \"values\" instead.",
             "type": "object"
           },
           "domain": {
-            "description": "The \"domain\" for the error.  If empty, it is an EDA\ncore error.  Alternatively it can be an EDA application\n\"apiVersion\" value (e.g. interfaces.eda.nokia.com/v1alpha1)\nindicating that the error is specific to that application.\nThe domain gives the receiver information that they can use\nto help them interpret the \"internal\" error code value, or\nto find an internationalization translation for the message.",
+            "description": "The \"domain\" for the error.  If empty, it is an EDA\ncore error.  Alternatively it can be an EDA application\n\"apiVersion\" value (e.g. interfaces.eda.nokia.com/v1alpha1)\nindicating that the error is specific to that application.\nThe domain gives the receiver information that they can use\nto help them interpret the \"type\" field.",
             "type": "string"
           },
           "errors": {
-            "description": "Collection of errors in cases where more than one exists. This needs to be\nflexible so we can support multiple formats",
+            "deprecated": true,
+            "description": "Collection of errors in cases where more than one exists.\nThis needs to be flexible so we can support multiple formats.\nDeprecated: Replaced by `causeCollection` or `causeIndexedCollection` instead.",
             "items": {
               "$ref": "#/components/schemas/ErrorItem"
             },
@@ -54,7 +82,8 @@
             "$ref": "#/components/schemas/ErrorIndex"
           },
           "internal": {
-            "description": "Internal error code in cases where we don't have an array of errors",
+            "deprecated": true,
+            "description": "Internal error code number.\n\nDeprecated: \"type\" \u0026 \"domain\" should be used instead to uniquely identify this error.",
             "format": "int64",
             "type": "integer"
           },
@@ -63,18 +92,27 @@
             "type": "string"
           },
           "ref": {
-            "description": "Reference to the error source. Should typically be the URI of the request",
+            "description": "Reference to the error source. Should typically be the URI of the request.",
             "type": "string"
           },
           "type": {
-            "description": "URI pointing at a document that describes the error and mitigation steps\nIf there is no document, point to the RFC for the HTTP error code",
+            "description": "Type defines a unique identifier for the error, within the domain.\nThis may be used (along with the domain) to find an internationalization translation for the message.\n\nSHOULD be a valid golang identifier, and SHOULD be in UpperCamelCase.",
             "type": "string"
+          },
+          "values": {
+            "additionalProperties": {
+              "type": "object"
+            },
+            "description": "Associated data/information.\nThe error \"message\" may contain {{name}} escapes that should be substituted with information from this dictionary.\n\nNote that this map MUST NOT contain JSON objects (`{...}`) or arrays (`[...]`), only simple JSON types are permitted.",
+            "type": "object"
           }
         },
         "required": [
-          "code",
-          "message"
+          "internal",
+          "message",
+          "type"
         ],
+        "title": "Generic error response for REST APIs.",
         "type": "object"
       },
       "WorkflowGetInputsRespElem": {
@@ -107,16 +145,6 @@
           "name",
           "version"
         ],
-        "type": "object"
-      },
-      "WorkflowId": {
-        "properties": {
-          "id": {
-            "description": "A workflow identifier; these are assigned by the system to a posted workflow.",
-            "format": "int64",
-            "type": "integer"
-          }
-        },
         "type": "object"
       },
       "WorkflowIdentifier": {
@@ -170,6 +198,9 @@
       "com.nokia.eda.os.v1alpha1.DeployImage": {
         "description": "DeployImage is the Schema for the deployimages API",
         "properties": {
+          "alarms": {
+            "$ref": "#/components/schemas/com.nokia.eda.os.v1alpha1.DeployImage_alarms"
+          },
           "apiVersion": {
             "default": "os.eda.nokia.com/v1alpha1",
             "pattern": "^os\\.eda\\.nokia\\.com/v1alpha1$",
@@ -178,6 +209,9 @@
               "ui-pattern-error": "The apiVersion must be set to os.eda.nokia.com/v1alpha1",
               "ui-visible-if": "false"
             }
+          },
+          "deviations": {
+            "$ref": "#/components/schemas/com.nokia.eda.os.v1alpha1.DeployImage_deviations"
           },
           "kind": {
             "default": "DeployImage",
@@ -203,6 +237,14 @@
                 "title": "Canaries",
                 "type": "array",
                 "x-eda-nokia-com": {
+                  "ui-auto-completes": [
+                    {
+                      "condition": "true",
+                      "group": "core.eda.nokia.com",
+                      "kind": "TopoNode",
+                      "type": "labelselector"
+                    }
+                  ],
                   "ui-order-priority": 380
                 }
               },
@@ -303,6 +345,14 @@
                 "title": "Node Selectors",
                 "type": "array",
                 "x-eda-nokia-com": {
+                  "ui-auto-completes": [
+                    {
+                      "condition": "true",
+                      "group": "core.eda.nokia.com",
+                      "kind": "TopoNode",
+                      "type": "labelselector"
+                    }
+                  ],
                   "ui-order-priority": 300
                 }
               },
@@ -342,6 +392,15 @@
                   "ui-order-priority": 400
                 }
               },
+              "reconnectionTimeoutSeconds": {
+                "default": 600,
+                "description": "Seconds to wait for node to come back online after reboot.",
+                "title": "ReconnectionTimeout",
+                "type": "integer",
+                "x-eda-nokia-com": {
+                  "ui-order-priority": 400
+                }
+              },
               "tranches": {
                 "description": "List of tranches to use for imaging.\nA tranche is a list of node selectors, and a name.\nTranches are upgraded in order, sequentially.",
                 "items": {
@@ -363,6 +422,14 @@
                       "title": "Node Selectors",
                       "type": "array",
                       "x-eda-nokia-com": {
+                        "ui-auto-completes": [
+                          {
+                            "condition": "true",
+                            "group": "core.eda.nokia.com",
+                            "kind": "TopoNode",
+                            "type": "labelselector"
+                          }
+                        ],
                         "ui-order-priority": 200
                       }
                     }
@@ -625,6 +692,73 @@
         ],
         "type": "object"
       },
+      "com.nokia.eda.os.v1alpha1.DeployImage_alarms": {
+        "properties": {
+          "critical": {
+            "format": "int64",
+            "readOnly": true,
+            "type": "integer",
+            "x-eda-nokia-com": {
+              "ui-title": "Critical",
+              "ui-title-key": "alarm_severities.critical"
+            }
+          },
+          "major": {
+            "format": "int64",
+            "readOnly": true,
+            "type": "integer",
+            "x-eda-nokia-com": {
+              "ui-title": "Major",
+              "ui-title-key": "alarm_severities.major"
+            }
+          },
+          "minor": {
+            "format": "int64",
+            "readOnly": true,
+            "type": "integer",
+            "x-eda-nokia-com": {
+              "ui-title": "minor",
+              "ui-title-key": "alarm_severities.minor"
+            }
+          },
+          "warning": {
+            "format": "int64",
+            "readOnly": true,
+            "type": "integer",
+            "x-eda-nokia-com": {
+              "ui-title": "Warning",
+              "ui-title-key": "alarm_severities.warning"
+            }
+          }
+        },
+        "readOnly": true,
+        "type": "object",
+        "x-eda-nokia-com": {
+          "ui-order-priority": 40,
+          "ui-title": "Alarms",
+          "ui-title-key": "alarms"
+        }
+      },
+      "com.nokia.eda.os.v1alpha1.DeployImage_deviations": {
+        "properties": {
+          "count": {
+            "format": "int64",
+            "readOnly": true,
+            "type": "integer",
+            "x-eda-nokia-com": {
+              "ui-title": "Count",
+              "ui-title-key": "count_column"
+            }
+          }
+        },
+        "readOnly": true,
+        "type": "object",
+        "x-eda-nokia-com": {
+          "ui-order-priority": 25,
+          "ui-title": "Deviations",
+          "ui-title-key": "deviations"
+        }
+      },
       "com.nokia.eda.os.v1alpha1.DeployImage_metadata": {
         "properties": {
           "annotations": {
@@ -745,6 +879,15 @@
           {
             "description": "a label selector string to filter the results based on CR labels",
             "in": "query",
+            "name": "labelSelector",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "deprecated": true,
+            "description": "Deprecated: a label selector string to filter the results based on CR labels",
+            "in": "query",
             "name": "label-selector",
             "schema": {
               "type": "string"
@@ -758,9 +901,14 @@
                 "schema": {
                   "$ref": "#/components/schemas/com.nokia.eda.os.v1alpha1.DeployImageList"
                 }
+              },
+              "application/yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/com.nokia.eda.os.v1alpha1.DeployImageList"
+                }
               }
             },
-            "description": "com.nokia.eda.os.v1alpha1.DeployImageList"
+            "description": "OK"
           },
           "default": {
             "content": {
@@ -818,6 +966,15 @@
           {
             "description": "a label selector string to filter the results based on CR labels",
             "in": "query",
+            "name": "labelSelector",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "deprecated": true,
+            "description": "Deprecated: a label selector string to filter the results based on CR labels",
+            "in": "query",
             "name": "label-selector",
             "schema": {
               "type": "string"
@@ -840,9 +997,14 @@
                 "schema": {
                   "$ref": "#/components/schemas/com.nokia.eda.os.v1alpha1.DeployImageList"
                 }
+              },
+              "application/yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/com.nokia.eda.os.v1alpha1.DeployImageList"
+                }
               }
             },
-            "description": "com.nokia.eda.os.v1alpha1.DeployImageList"
+            "description": "OK"
           },
           "default": {
             "content": {
@@ -865,7 +1027,7 @@
         "operationId": "wfCreateOsEdaNokiaComV1alpha1NamespaceDeployimages",
         "parameters": [
           {
-            "description": "the namespace scope in which to create the DeployImage",
+            "description": "the namespace scope in which to operate",
             "in": "path",
             "name": "namespace",
             "required": true,
@@ -889,11 +1051,16 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WorkflowId"
+                  "$ref": "#/components/schemas/com.nokia.eda.os.v1alpha1.DeployImage"
+                }
+              },
+              "application/yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/com.nokia.eda.os.v1alpha1.DeployImage"
                 }
               }
             },
-            "description": "The response for a successful POST workflows request."
+            "description": "Created"
           },
           "default": {
             "content": {
@@ -999,9 +1166,14 @@
                 "schema": {
                   "$ref": "#/components/schemas/com.nokia.eda.os.v1alpha1.DeployImage"
                 }
+              },
+              "application/yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/com.nokia.eda.os.v1alpha1.DeployImage"
+                }
               }
             },
-            "description": "com.nokia.eda.os.v1alpha1.DeployImage"
+            "description": "OK"
           },
           "default": {
             "content": {
@@ -1047,6 +1219,14 @@
           "200": {
             "content": {
               "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "application/yaml": {
                 "schema": {
                   "items": {
                     "type": "string"
@@ -1109,12 +1289,6 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "schema": {
-                  "format": "binary",
-                  "type": "string"
-                }
-              },
               "application/octet-stream": {
                 "schema": {
                   "format": "binary",
@@ -1127,11 +1301,6 @@
           "default": {
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "application/octet-stream": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 }
@@ -1173,6 +1342,14 @@
           "200": {
             "content": {
               "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/WorkflowGetInputsRespElem"
+                  },
+                  "type": "array"
+                }
+              },
+              "application/yaml": {
                 "schema": {
                   "items": {
                     "$ref": "#/components/schemas/WorkflowGetInputsRespElem"
@@ -1266,6 +1443,22 @@
             }
           },
           {
+            "description": "client information for streaming request",
+            "in": "query",
+            "name": "eventclient",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "stream information for streaming request",
+            "in": "query",
+            "name": "stream",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "description": "the namespace scope in which to operate",
             "in": "path",
             "name": "namespace",
@@ -1279,6 +1472,11 @@
           "200": {
             "content": {
               "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/yaml": {
                 "schema": {
                   "type": "string"
                 }
@@ -1298,6 +1496,50 @@
           }
         },
         "summary": "Read logs output by the DeployImage.",
+        "tags": [
+          "workflows"
+        ]
+      }
+    },
+    "/workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages/{name}/_terminate": {
+      "put": {
+        "operationId": "wfTerminateOsEdaNokiaComV1alpha1NamespaceDeployimages",
+        "parameters": [
+          {
+            "description": "name of the DeployImage",
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "the namespace scope in which to operate",
+            "in": "path",
+            "name": "namespace",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "no data is returned for this response type."
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Details of an error in response to an API REST request."
+          }
+        },
+        "summary": "Terminate a DeployImage workflow.",
         "tags": [
           "workflows"
         ]

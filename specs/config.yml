@@ -18,3 +18,13 @@ data_sources:
       method: GET
 
 resources:
+  deploy_image:
+    create:
+      path: /workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages
+      method: POST
+    read:
+      path: /workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages/{name}
+      method: GET
+    delete:
+      path: /workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages/{name}
+      method: DELETE

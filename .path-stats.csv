@@ -1,11 +1,12 @@
 Path,Method,Schema,Model Name,Supported,Datasource,Resource
 /workflows/v1/os.eda.nokia.com/v1alpha1/deployimages,GET,com.nokia.eda.os.v1alpha1.DeployImageList,,false,false,false
 /workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages,GET,com.nokia.eda.os.v1alpha1.DeployImageList,deploy_image_list,true,true,false
-/workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages,POST,com.nokia.eda.os.v1alpha1.DeployImage,,false,false,false
-/workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages/{name},DELETE,,,false,false,false
-/workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages/{name},GET,com.nokia.eda.os.v1alpha1.DeployImage,deploy_image,true,true,false
+/workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages,POST,com.nokia.eda.os.v1alpha1.DeployImage,deploy_image,true,false,true
+/workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages/{name},DELETE,,deploy_image,true,false,true
+/workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages/{name},GET,com.nokia.eda.os.v1alpha1.DeployImage,deploy_image,true,true,true
 /workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages/{name}/_artifacts,GET,,,false,false,false
 /workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages/{name}/_artifacts/{artifact},GET,,,false,false,false
 /workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages/{name}/_input,GET,WorkflowGetInputsRespElem,workflow_get_inputs_resp_elem,true,true,false
 /workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages/{name}/_input,PUT,WorkflowInputData,,false,false,false
 /workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages/{name}/_logs,GET,,,false,false,false
+/workflows/v1/os.eda.nokia.com/v1alpha1/namespaces/{namespace}/deployimages/{name}/_terminate,PUT,,,false,false,false

@@ -24,6 +24,7 @@ description: |-
 - `fields` (String) a comma-separated list of resource fields to fetch/return.  If unspecified, all fields are fetched.  If empty, only key-fields are fetched.
 - `filter` (String) an EQL "where" expression that will be used to filter the set of resources returned.
 - `label_selector` (String) a label selector string to filter the results based on CR labels
+- `labelselector` (String) Deprecated: a label selector string to filter the results based on CR labels
 
 ### Read-Only
 
@@ -44,7 +45,9 @@ It also supports canaries, which are upgraded before any other targets. (see [be
 
 Read-Only:
 
+- `alarms` (Attributes) (see [below for nested schema](#nestedatt--items--alarms))
 - `api_version` (String)
+- `deviations` (Attributes) (see [below for nested schema](#nestedatt--items--deviations))
 - `kind` (String)
 - `metadata` (Attributes) (see [below for nested schema](#nestedatt--items--metadata))
 - `status` (Attributes) Status of the imaging operation. (see [below for nested schema](#nestedatt--items--status))
@@ -69,6 +72,7 @@ This is a list of label expressions, e.g. ["eda.nokia.com/role=leaf"].
 - `nodes` (List of String) List of nodes to deploy images on.
 - `prompt` (List of String) Control when to prompt the user for input.
 If any pre or post checks fail, the user will be prompted for input, but this may be used to prompt even if they're successful.
+- `reconnection_timeout_seconds` (Number) Seconds to wait for node to come back online after reboot.
 - `tranches` (Attributes List) List of tranches to use for imaging.
 A tranche is a list of node selectors, and a name.
 Tranches are upgraded in order, sequentially. (see [below for nested schema](#nestedatt--items--spec--tranches))
@@ -105,6 +109,25 @@ This is used to identify the tranche in the UI and in logs.
 This matches labels on TopoNode resources, including those TopoNodes in the list of nodes that will be imaged.
 This is a list of label expressions, e.g. ["eda.nokia.com/role=leaf"].
 
+
+
+<a id="nestedatt--items--alarms"></a>
+### Nested Schema for `items.alarms`
+
+Read-Only:
+
+- `critical` (Number)
+- `major` (Number)
+- `minor` (Number)
+- `warning` (Number)
+
+
+<a id="nestedatt--items--deviations"></a>
+### Nested Schema for `items.deviations`
+
+Read-Only:
+
+- `count` (Number)
 
 
 <a id="nestedatt--items--metadata"></a>
